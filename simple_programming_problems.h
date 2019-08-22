@@ -13,6 +13,28 @@ https://stackoverflow.com/questions/19415521/cannot-open-include-file-with-visua
 
 //list of common helper functions frequently used throughout the exercises from https://adriann.github.io/programming_problems.html
 
+
+enum NumeralSystem
+{
+	BINARY = 2,
+	TERNARY = 3,
+	QUATERNARY = 4,
+	QUINARY = 5,
+	SENARY = 6,
+	SEPTENARY = 7,
+	OCTAL = 8,
+	NONARY = 9,
+	DECIMAL = 10,
+	UNDECIMAL = 11,
+	DUODECIMAL = 12,
+	TRIDECIMAL = 13,
+	TETRADECIMAL = 14,
+	PENTADECIMAL = 15,
+	HEXADECIMAL = 16
+};
+
+
+
 ////seeds random number generator with current time
 void seedGenerator()
 {
@@ -169,6 +191,12 @@ std::string getNumberString()
 
 
 	return userInput;
+}
+
+////Gets a string from the user that must be valid number for the base/radix entered as a parameter
+std::string getBaseString(NumeralSystem base)
+{
+
 }
 
 ////returns a number to the 'nth' power | assumes whole numbers are used for exponent

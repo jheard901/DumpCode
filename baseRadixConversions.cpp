@@ -18,24 +18,7 @@ int highestDigitInCommon(int, int);
 
 int main()
 {
-	enum NumeralSystem
-	{
-		BINARY = 2,
-		TERNARY = 3,
-		QUATERNARY = 4,
-		QUINARY = 5,
-		SENARY = 6,
-		SEPTENARY = 7,
-		OCTAL = 8,
-		NONARY = 9,
-		DECIMAL = 10,
-		UNDECIMAL = 11,
-		DUODECIMAL = 12,
-		TRIDECIMAL = 13,
-		TETRADECIMAL = 14,
-		PENTADECIMAL = 15,
-		HEXADECIMAL = 16
-	};
+	
 
 	bool isActive = true;
 
@@ -48,6 +31,9 @@ int main()
 
 		std::cout << "\n\nEnter a target base/radix to convert to:\n";
 		NumeralSystem targetBase = static_cast<NumeralSystem>(getUserNumber(2, 16));
+
+		std::cout << "\n\nEnter a number to convert from base " << startBase << " to base " << targetBase << ":\n";
+		std::string userNumber = getBaseString(startBase);
 
 
 		//need to declare these outside of switch statement | https://stackoverflow.com/questions/20177495/error-c2360-initialization-of-hdc-is-skipped-by-case-label
