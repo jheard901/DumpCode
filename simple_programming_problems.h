@@ -193,10 +193,194 @@ std::string getNumberString()
 	return userInput;
 }
 
+////returns true of the inputted string is a valid number of the inputted base
+bool isValidNumber(std::string str, NumeralSystem base)
+{
+	switch (base)
+	{
+		//base 2
+	case BINARY:
+		return str.find_first_not_of("01") == std::string::npos;
+		break;
+
+		//base 3
+	case TERNARY:
+		return str.find_first_not_of("012") == std::string::npos;
+		break;
+
+		//base 4
+	case QUATERNARY:
+		return str.find_first_not_of("0123") == std::string::npos;
+		break;
+
+		//base 5
+	case QUINARY:
+		return str.find_first_not_of("01234") == std::string::npos;
+		break;
+
+		//base 6
+	case SENARY:
+		return str.find_first_not_of("012345") == std::string::npos;
+		break;
+
+		//base 7
+	case SEPTENARY:
+		return str.find_first_not_of("0123456") == std::string::npos;
+		break;
+
+		//base 8
+	case OCTAL:
+		return str.find_first_not_of("01234567") == std::string::npos;
+		break;
+
+		//base 9
+	case NONARY:
+		return str.find_first_not_of("012345678") == std::string::npos;
+		break;
+
+		//base 10
+	case DECIMAL:
+		return str.find_first_not_of("0123456789") == std::string::npos;
+		break;
+
+		//base 11
+	case UNDECIMAL:
+		return str.find_first_not_of("0123456789aA") == std::string::npos;
+		break;
+
+		//base 12
+	case DUODECIMAL:
+		return str.find_first_not_of("0123456789aAbB") == std::string::npos;
+		break;
+
+		//base 13
+	case TRIDECIMAL:
+		return str.find_first_not_of("0123456789aAbBcC") == std::string::npos;
+		break;
+
+		//base 14
+	case TETRADECIMAL:
+		return str.find_first_not_of("0123456789aAbBcCdD") == std::string::npos;
+		break;
+
+		//base 15
+	case PENTADECIMAL:
+		return str.find_first_not_of("0123456789aAbBcCdDeE") == std::string::npos;
+		break;
+
+		//base 16
+	case HEXADECIMAL:
+		return str.find_first_not_of("0123456789aAbBcCdDeEfF") == std::string::npos;
+		break;
+	default:
+		std::cout << "\nThe input base is invalid.\n";
+		return false;
+	}
+}
+
 ////Gets a string from the user that must be valid number for the base/radix entered as a parameter
+// formatting code indentations https://msdn.microsoft.com/en-us/library/999b219z(v=vs.71).aspx
 std::string getBaseString(NumeralSystem base)
 {
+	bool isValid = false;
+	
+	std::string userStr;
+	
+	while (!isValid)
+	{
+		std::getline(std::cin, userStr);
 
+		if (isValidNumber(userStr, base))
+		{
+			isValid = true;
+		}
+		else
+		{
+			std::string values;
+			switch (base)
+			{
+				//base 2
+			case BINARY:
+				values = "01";
+				break;
+
+				//base 3
+			case TERNARY:
+				values = "012";
+				break;
+
+				//base 4
+			case QUATERNARY:
+				values = "0123";
+				break;
+
+				//base 5
+			case QUINARY:
+				values = "01234";
+				break;
+
+				//base 6
+			case SENARY:
+				values = "012345";
+				break;
+
+				//base 7
+			case SEPTENARY:
+				values = "0123456";
+				break;
+
+				//base 8
+			case OCTAL:
+				values = "01234567";
+				break;
+
+				//base 9
+			case NONARY:
+				values = "012345678";
+				break;
+
+				//base 10
+			case DECIMAL:
+				values = "0123456789";
+				break;
+
+				//base 11
+			case UNDECIMAL:
+				values = "0123456789A";
+				break;
+
+				//base 12
+			case DUODECIMAL:
+				values = "0123456789AB";
+				break;
+
+				//base 13
+			case TRIDECIMAL:
+				values = "0123456789ABC";
+				break;
+
+				//base 14
+			case TETRADECIMAL:
+				values = "0123456789ABCD";
+				break;
+
+				//base 15
+			case PENTADECIMAL:
+				values = "0123456789ABCDE";
+				break;
+
+				//base 16
+			case HEXADECIMAL:
+				values = "0123456789ABCDEF";
+				break;
+			default:
+				values = "01";
+			}
+			std::cout << "\n\nNumber entered is invalid. Valid values are " << values << ". Try Again.\n";
+		}
+	}
+	
+	return userStr;
 }
 
 ////returns a number to the 'nth' power | assumes whole numbers are used for exponent
@@ -219,4 +403,21 @@ T toPower(T base, T exponent)
 	}
 }
 
+////Converts a string to a list of characters
+std::list<char> convertToList(std::string baseString)
+{
+
+}
+
+////Converts a list of chars to a string
+std::string convertToString(std::list<char> baseList)
+{
+
+}
+
+////Takes in a string and what base it is, then converts that number string to the target base and returns it as a string
+std::string convertToBase(std::string baseNum, NumeralSystem start, NumeralSystem target)
+{
+
+}
 
