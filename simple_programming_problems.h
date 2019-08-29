@@ -2,16 +2,17 @@
 
 #pragma once
 
-/* Tidbits I've forgotten:
-https://stackoverflow.com/questions/19415521/cannot-open-include-file-with-visual-studio
-*/
-
 #include <iostream>
 #include <ctime> //for generating random numbers
 #include <list>
 #include <string>
 
 //list of common helper functions frequently used throughout the exercises from https://adriann.github.io/programming_problems.html
+
+
+/* Tidbits I've forgotten:
+https://stackoverflow.com/questions/19415521/cannot-open-include-file-with-visual-studio
+*/
 
 
 enum NumeralSystem
