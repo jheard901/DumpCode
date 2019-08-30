@@ -384,23 +384,16 @@ std::string getBaseString(NumeralSystem base)
 	return userStr;
 }
 
-////takes a number and the type of base it is then converts it to its decimal equivalent
-int toDecimal(NumeralSystem base, std::string number)
-{
-	//obtain the value increment of a column for its base, this number is equal to base^x where base is the base and ^x is the column location starting from the right and migrating to the left where the first column is 0 and increments by 1 until reaching last column on the left
-
-	//Each value in a column gets multipled by its columnValueIncrement e.g. 202 for base 3 is calculated as (2 * 3^2) + (0 * 3^1) + (2 * 3^0) | recall any number to power 0 equals 1 so the result here is 20 in decimal form (base 10)
-
-	//Add the result of each column to get the decimal form
-}
-
 ////returns a number to the 'nth' power | assumes whole numbers are used for exponent
 template <class T>
 T toPower(T base, T exponent)
 {
 	int originalBase = base;
-
-	if (exponent == 1)
+	if (exponent == 0)
+	{
+		return 1;
+	}
+	else if (exponent == 1)
 	{
 		return base;
 	}
@@ -414,16 +407,43 @@ T toPower(T base, T exponent)
 	}
 }
 
+////takes a number and the type of base it is then converts it to its decimal equivalent
+int toDecimal(NumeralSystem base, std::string number)
+{
+	//obtain the value increment of a column for its base, this number is equal to base^x where base is the base and ^x is the column location starting from the right and migrating to the left where the first column is 0 and increments by 1 until reaching last column on the left
+	int* colValueIncrement = new int[number.length()];
+	int column = 0;
+	for (int i = number.length() - 1; i >= 0; i--)
+	{
+		colValueIncrement[i] = toPower(static_cast<int>(base), column);
+		column++;
+	}
+
+	//Each value in a column gets multipled by its columnValueIncrement e.g. 202 for base 3 is calculated as (2 * 3^2) + (0 * 3^1) + (2 * 3^0) | recall any number to power 0 equals 1 so the result here is 20 in decimal form (base 10)
+	int decimalValue = 0;
+	for (int i = number.length() - 1; i >= 0; i--)
+	{
+		decimalValue += (number[i] - '0') * colValueIncrement[i];
+	}
+	//*NOTE: Need to add unique conditional for handling base 11-16 since letters are included.*
+
+	//Add the result of each column to get the decimal form
+	delete[] colValueIncrement;
+	return decimalValue;
+}
+
 ////Converts a string to a list of characters
 std::list<char> convertToList(std::string baseString)
 {
-
+	std::list<char> temp;
+	return temp;
 }
 
 ////Converts a list of chars to a string
 std::string convertToString(std::list<char> baseList)
 {
-
+	std::string temp;
+	return temp;
 }
 
 ////Takes in a string and what base it is, then converts that number string to the target base and returns it as a string
@@ -436,5 +456,10 @@ std::string convertToBase(std::string baseNum, NumeralSystem start, NumeralSyste
 	//Add columns until the value of the first column on the left is greater than or equals the number in decimal form, and the next column (i.e. 2nd from the left) is less than the number in decimal form || NOTE: if the 1st column is greater than number, then we do not include it in the number string, but if it equals then we do include it in the number string
 
 	//Starting with the highest value column increment by 1: check its decimal equivalent each time to see if it exceeds or is equal to the value of the number from its prior base. If it exceeds before reaching the last valid number in a column, then decrement by 1, and move to the next column; repeat this process until equal to the number. NOTE: if we hit the highest value in a column and do not exceed number, then retain that value in the column and move to the next column continuing with the process.
+	
+	//temp code
+	toDecimal(start, baseNum);
+	std::string temp;
+	return temp;
 }
 
