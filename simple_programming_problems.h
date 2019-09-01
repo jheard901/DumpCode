@@ -34,7 +34,34 @@ enum NumeralSystem
 	HEXADECIMAL = 16
 };
 
+//to print enum value as text using operator overloading: https://stackoverflow.com/questions/3342726/c-print-out-enum-value-as-text
+std::ostream& operator<<(std::ostream& out, const NumeralSystem value)
+{
+	const char* c = 0;
 
+#define CASE_VALUE(n) case(n): c = #n; break;
+	switch (value)
+	{
+		CASE_VALUE(BINARY);
+		CASE_VALUE(TERNARY);
+		CASE_VALUE(QUATERNARY);
+		CASE_VALUE(QUINARY);
+		CASE_VALUE(SENARY);
+		CASE_VALUE(SEPTENARY);
+		CASE_VALUE(OCTAL);
+		CASE_VALUE(NONARY);
+		CASE_VALUE(DECIMAL);
+		CASE_VALUE(UNDECIMAL);
+		CASE_VALUE(DUODECIMAL);
+		CASE_VALUE(TRIDECIMAL);
+		CASE_VALUE(TETRADECIMAL);
+		CASE_VALUE(PENTADECIMAL);
+		CASE_VALUE(HEXADECIMAL);
+	}
+#undef CASE_VALUE
+
+	return out << c;
+}
 
 ////seeds random number generator with current time
 void seedGenerator()
@@ -280,7 +307,7 @@ bool isValidNumber(std::string str, NumeralSystem base)
 }
 
 ////Gets a string from the user that must be valid number for the base/radix entered as a parameter
-// formatting code indentations https://msdn.microsoft.com/en-us/library/999b219z(v=vs.71).aspx
+// formatting code indentations https://msdn.microsoft.com/en-us/library/999b219z(v=vs.71).aspx || Ctrl+K, Ctrl+F
 std::string getBaseString(NumeralSystem base)
 {
 	bool isValid = false;
@@ -407,6 +434,151 @@ T toPower(T base, T exponent)
 	}
 }
 
+////returns the int value of a char from a string of base 2 - 16
+int GetIntValue(char value)
+{
+	if (value == '0')
+	{
+		return 0;
+	}
+	else if (value == '1')
+	{
+		return 1;
+	}
+	else if (value == '2')
+	{
+		return 2;
+	}
+	else if (value == '3')
+	{
+		return 3;
+	}
+	else if (value == '4')
+	{
+		return 4;
+	}
+	else if (value == '5')
+	{
+		return 5;
+	}
+	else if (value == '6')
+	{
+		return 6;
+	}
+	else if (value == '7')
+	{
+		return 7;
+	}
+	else if (value == '8')
+	{
+		return 8;
+	}
+	else if (value == '9')
+	{
+		return 9;
+	}
+	else if (value == 'A')
+	{
+		return 10;
+	}
+	else if (value == 'B')
+	{
+		return 11;
+	}
+	else if (value == 'C')
+	{
+		return 12;
+	}
+	else if (value == 'D')
+	{
+		return 13;
+	}
+	else if (value == 'E')
+	{
+		return 14;
+	}
+	else if (value == 'F')
+	{
+		return 15;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+////returns the string value equivalent of an int up to base 16
+std::string GetStringValue(int value)
+{
+	switch (value)
+	{
+	case 0:
+		return "0";
+		break;
+	case 1:
+		return "1";
+		break;
+	case 2:
+		return "2";
+		break;
+	case 3:
+		return "3";
+		break;
+	case 4:
+		return "4";
+		break;
+	case 5:
+		return "5";
+		break;
+	case 6:
+		return "6";
+		break;
+	case 7:
+		return "7";
+		break;
+	case 8:
+		return "8";
+		break;
+	case 9:
+		return "9";
+		break;
+	case 10:
+		return "A";
+		break;
+	case 11:
+		return "B";
+		break;
+	case 12:
+		return "C";
+		break;
+	case 13:
+		return "D";
+		break;
+	case 14:
+		return "E";
+		break;
+	case 15:
+		return "F";
+		break;
+	default:
+		return "0";
+	}
+}
+
+//be mindful the only valid numbers are 0 to (base - 1); so in base 3 the numbers 0, 1, and 2 are the only valid numbers for example.
+////returns true if the int can be incremented for a specified base
+bool canIncrement(NumeralSystem base, int value)
+{
+	if (value < base - 1)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 ////takes a number and the type of base it is then converts it to its decimal equivalent
 int toDecimal(NumeralSystem base, std::string number)
 {
@@ -423,43 +595,110 @@ int toDecimal(NumeralSystem base, std::string number)
 	int decimalValue = 0;
 	for (int i = number.length() - 1; i >= 0; i--)
 	{
-		decimalValue += (number[i] - '0') * colValueIncrement[i];
+		decimalValue += GetIntValue(number[i]) * colValueIncrement[i];
 	}
-	//*NOTE: Need to add unique conditional for handling base 11-16 since letters are included.*
 
 	//Add the result of each column to get the decimal form
 	delete[] colValueIncrement;
 	return decimalValue;
 }
 
-////Converts a string to a list of characters
-std::list<char> convertToList(std::string baseString)
+////Takes a number in decimal value and converts it to the target base
+std::string toBase(int decimal, NumeralSystem target)
 {
-	std::list<char> temp;
-	return temp;
-}
+	std::string targetNumString;
+	bool bReady = false;
+	int column = 0; //the column currently in use
+	int targetNumCols = 0; //number of columns required to represent the decimal number in the specified base
+	int cumulativeColumnValue = 0; //the value of all preceding columns combined
 
-////Converts a list of chars to a string
-std::string convertToString(std::list<char> baseList)
-{
-	std::string temp;
-	return temp;
+	//Add columns until the value of the first column on the left is greater than or equals the number in decimal form, and the next column
+	//(i.e. 2nd from the left) is less than the number in decimal form || NOTE: if the 1st column is greater than number, then we do not
+	//include it in the number string, but if it equals then we do include it in the number string
+	while (!bReady)
+	{
+		cumulativeColumnValue += (target - 1) * toPower(static_cast<int>(target), column);
+
+		if (cumulativeColumnValue >= decimal) //I did a version of this column check using max column value on paper || will stick with the cumulative value solution for now
+		{
+			bReady = true;
+			column++;
+			targetNumCols = column;
+		}
+		else
+		{
+			column++;
+		}
+	}
+
+	//create the default string of value 0 for target string
+	for (int i = 0; i < targetNumCols; i++)
+	{
+		targetNumString.insert(0, "0");
+	}
+	
+	//Starting with the highest value column increment by 1: check its decimal equivalent each time to see if it exceeds or is equal to the
+	//value of the number from its prior base. If it exceeds before reaching the last valid number in a column, then decrement by 1, and move
+	//to the next column; repeat this process until equal to the number. NOTE: if we hit the highest value in a column and do not exceed number,
+	//then retain that value in the column and move to the next column continuing with the process.
+	bReady = false;
+	column = 0;
+	int testValue = 0;
+	const int ONE_UNIT = 1;
+	while (!bReady)
+	{
+		targetNumString.replace(column, ONE_UNIT, GetStringValue(testValue));
+		int tempDecimal = toDecimal(target, targetNumString);
+
+		if (tempDecimal > decimal)
+		{
+			//if over the target value, decrement value in current column by one then move on to next column
+			testValue--;
+			targetNumString.replace(column, ONE_UNIT, GetStringValue(testValue));
+			column++;
+			testValue = 0;
+		}
+		else if (tempDecimal == decimal)
+		{
+			bReady = true;
+		}
+		else
+		{
+			if (canIncrement(target, testValue))
+			{
+				testValue++;
+			}
+			else
+			{
+				column++;
+				testValue = 0;
+
+				//this should never be true, but should catch errors if they occur
+				if (column >= (signed)targetNumString.length())
+				{
+					std::cout << "\nAn error occurred in converting to the base number.\n";
+					return targetNumString;
+				}
+			}
+		}
+	}
+	return targetNumString;
 }
 
 ////Takes in a string and what base it is, then converts that number string to the target base and returns it as a string
 std::string convertToBase(std::string baseNum, NumeralSystem start, NumeralSystem target)
 {
-	//be mindful the only valid numbers are 0 to (base - 1); so in base 3 the numbers 0, 1, and 2 are the only valid numbers for example.
+	//first check to see if the start and target base are the same
+	if (start == target)
+	{
+		return baseNum;
+	}
 
 	//first change the starting base to decimal form
+	int decimalBaseNum = toDecimal(start, baseNum);
 
-	//Add columns until the value of the first column on the left is greater than or equals the number in decimal form, and the next column (i.e. 2nd from the left) is less than the number in decimal form || NOTE: if the 1st column is greater than number, then we do not include it in the number string, but if it equals then we do include it in the number string
-
-	//Starting with the highest value column increment by 1: check its decimal equivalent each time to see if it exceeds or is equal to the value of the number from its prior base. If it exceeds before reaching the last valid number in a column, then decrement by 1, and move to the next column; repeat this process until equal to the number. NOTE: if we hit the highest value in a column and do not exceed number, then retain that value in the column and move to the next column continuing with the process.
+	//convert the decimal form of number to the target base
+	std::string targetBaseNum = toBase(decimalBaseNum, target);
 	
-	//temp code
-	toDecimal(start, baseNum);
-	std::string temp;
-	return temp;
+	return targetBaseNum;
 }
-
